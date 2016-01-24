@@ -2,7 +2,7 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /opt/librenms/html;
+        root {{ librenms_install_dir }}/html;
         index index.php;
 
         error_log /var/log/nginx/librenms_error.log;
