@@ -7,7 +7,7 @@ vars = YAML.load_file('vars.yml')
 
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
-  config.vm.hostname = "devstack"
+  config.vm.hostname = "librenms"
   config.vm.network :private_network, ip: vars["vagrant_host"]
   config.vm.provider :virtualbox do |vb|
     vb.memory = 1024

@@ -7,6 +7,6 @@
     - vars.yml
   roles:
     - snmp
-      #    - mariadb
-      #    - nginx
+    - mariadb
+    - nginx
     - librenms
