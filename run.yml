@@ -1,0 +1,12 @@
+---
+
+- name: install librenms
+  hosts: all
+  become: True
+  vars_files:
+    - vars.yml
+  roles:
+    - snmp
+      #    - mariadb
+      #    - nginx
+    - librenms

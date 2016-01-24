@@ -1,0 +1,30 @@
+---
+
+- name: install packages
+  apt:
+    name={{ item }}
+    state=latest
+  with_items:
+    - nginx
+    - php5-fpm
+    - php5-cli
+    - php5-mysql
+    - php5-gd
+    - php5-snmp
+    - php-pear
+    - php5-curl
+    - php5-mcrypt
+    - php5-json
+    - php-net-ipv4
+    - php-net-ipv6
+
+- name: copy configuration
+  template:
+    src=default.j2
+    dest=/etc/nginx/sites-available/default
+
+- name: restart service
+  service:
+    name=nginx
+    state=restarted
+    enabled=yes

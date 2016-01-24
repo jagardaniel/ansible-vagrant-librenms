@@ -1,0 +1,16 @@
+---
+
+vagrant_host: 192.168.27.100
+
+mariadb_user: librenms
+mariadb_password: librenms
+mariadb_database: librenms
+
+librenms_install_dir: /opt/librenms
+librenms_git_repo: https://github.com/librenms/librenms
+
+librenms_user: admin
+librenms_password: admin
+
+librenms_poller_threads: 16
+librenms_daily_updates: 1

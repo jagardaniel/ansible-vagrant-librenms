@@ -1,0 +1,73 @@
+---
+
+- name: install packages
+  apt:
+    name={{ item }}
+    state=latest
+  with_items:
+    - graphviz
+    - fping
+    - imagemagick
+    - whois
+    - mtr-tiny
+    - nmap
+    - rrdtool
+    - git
+
+- name: setup user
+  user:
+    name=librenms
+    system=yes
+    createhome=no
+    home={{ librenms_install_dir }}
+
+- name: add www-data user to librenms group
+  user:
+    name=www-data
+    groups=librenms
+    append=yes
+
+- name: clone librenms repo
+  git:
+    repo={{ librenms_git_repo }}
+    dest={{ librenms_install_dir }}
+
+- name: create logs directory
+  file:
+    path={{ librenms_install_dir }}/logs
+    owner=www-data
+    group=www-data
+    state=directory
+
+- name: create rrd directory
+  file:
+    path={{ librenms_install_dir }}/rrd
+    owner=librenms
+    group=librenms
+    mode=0775
+    state=directory
+
+- name: copy configuration
+  template:
+    src=config.php.j2
+    dest={{ librenms_install_dir }}/config.php
+
+- name: run setup commands
+  command:
+    chdir={{ librenms_install_dir }}
+    {{ item }}
+  with_items:
+   - php build-base.php
+   - php adduser.php {{ librenms_user }} {{ librenms_password }} 10
+   - php addhost.php localhost public v2c
+   - php discovery.php -h all
+   - /opt/librenms/poller-wrapper.py {{ librenms_poller_threads }} >> /dev/null 2>&1
+
+- name: copy cronjob
+  template:
+    src=librenms.nonroot.cron.j2
+    dest=/etc/cron.d/librenms
+
+- name: installation complete
+  debug:
+    msg="Installation is complete. You can now visit http://{{ vagrant_host }} and login with {{ librenms_user }}/{{ librenms_password }}"

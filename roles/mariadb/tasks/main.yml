@@ -1,0 +1,20 @@
+---
+
+- name: install packages
+  apt:
+    name={{ item }}
+    state=latest
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+
+- name: setup database
+  mysql_db:
+    name={{ mariadb_database }}
+    state=present
+
+- name: setup user
+  mysql_user:
+    name={{ mariadb_user }}
+    password={{ mariadb_password }}
+    priv={{ mariadb_database }}.*:ALL
